@@ -21,16 +21,21 @@ async function main() {
     },
   });
 
-  const worker = await prisma.user.upsert({
-    where: { email: 'worker@example.com' },
-    update: {},
-    create: {
-      name: 'Garbage Worker',
-      email: 'worker@example.com',
-      password: workerPassword,
-      role: 'Worker',
-    },
-  });
+  // Create 10 worker users
+  const workers = [];
+  for (let i = 1; i <= 10; i++) {
+    const worker = await prisma.user.upsert({
+      where: { email: `worker${i}@example.com` },
+      update: {},
+      create: {
+        name: `Worker ${i}`,
+        email: `worker${i}@example.com`,
+        password: workerPassword,
+        role: 'Worker',
+      },
+    });
+    workers.push(worker);
+  }
 
   const citizen = await prisma.user.upsert({
     where: { email: 'citizen@example.com' },
@@ -42,6 +47,19 @@ async function main() {
       role: 'Citizen',
     },
   });
+
+  // Create Worker entries for each worker user
+  for (const worker of workers) {
+    await prisma.worker.upsert({
+      where: { userId: worker.id },
+      update: {},
+      create: {
+        userId: worker.id,
+        currentWorkload: 0,
+        maxTasks: 10,
+      },
+    });
+  }
 
   // Create sample pickup requests
   await prisma.pickupRequest.createMany({
@@ -59,7 +77,7 @@ async function main() {
         pickupDate: new Date('2026-01-26'),
         status: 'Assigned',
         citizenId: citizen.id,
-        workerId: worker.id,
+        workerId: workers[0].id,
       },
       {
         address: '789 Pine Rd',
@@ -67,9 +85,20 @@ async function main() {
         pickupDate: new Date('2026-01-20'),
         status: 'Collected',
         citizenId: citizen.id,
-        workerId: worker.id,
+        workerId: workers[0].id,
       },
     ],
+  });
+
+  // Create sample garbage report
+  await prisma.garbageReport.create({
+    data: {
+      imagePath: '/uploads/sample.jpg',
+      latitude: 12.9716,
+      longitude: 77.5946,
+      status: 'REPORTED',
+      citizenId: citizen.id,
+    },
   });
 
   console.log('Database seeded successfully');
