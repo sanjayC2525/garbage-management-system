@@ -5,9 +5,10 @@ A full-stack web application for managing garbage pickup requests with role-base
 ## Features
 
 - **Authentication**: JWT-based login with role-based access (Admin, Worker, Citizen)
-- **Citizen Module**: Submit pickup requests, view request status
-- **Worker Module**: View assigned requests, update status, view daily routes
-- **Admin Module**: Dashboard with statistics, assign workers, manage users
+- **Citizen Module**: Submit pickup requests, view request status, report garbage with photo and location
+- **Worker Module**: View assigned requests, update status, view daily routes, view AI-assigned tasks
+- **Admin Module**: Dashboard with statistics, assign workers, manage users, verify garbage reports
+- **AI Assignment Engine**: Rule-based task assignment with workload balancing
 
 ## Tech Stack
 
@@ -64,7 +65,47 @@ A full-stack web application for managing garbage pickup requests with role-base
 - `PATCH /api/pickup-requests/:id/assign` - Assign worker (Admin only)
 - `GET /api/pickup-requests/stats` - Get statistics (Admin only)
 
-## Project Structure
+### Garbage Reports
+- `POST /api/garbage-reports` - Submit garbage report with photo (Citizen only)
+- `GET /api/garbage-reports` - Get all reports (Admin only)
+- `PUT /api/garbage-reports/:id` - Approve/Reject report (Admin only)
+
+### Tasks
+- `GET /api/tasks` - Get assigned tasks (Worker only)
+- `PUT /api/tasks/:id/collect` - Mark task as collected (Worker only)
+
+## AI Assignment Engine
+
+The system includes a rule-based AI assignment engine for automatically assigning garbage collection tasks to workers based on photo-based citizen reports.
+
+### How It Works
+
+1. **Citizen Reports**: Citizens can submit garbage reports with photos and GPS coordinates using the HTML5 Geolocation API.
+
+2. **Admin Verification**: Admins review submitted reports and can approve or reject them.
+
+3. **AI Assignment**: Upon approval, the AI engine automatically assigns the task to the least-loaded worker.
+
+4. **Task Execution**: Workers receive tasks with photo, location, and scheduled time, and can mark them as collected.
+
+### Assignment Rules
+
+- **Workload Balancing**: Tasks are assigned to the worker with the current lowest workload.
+- **Capacity Limits**: 
+  - Maximum 10 workers in the system
+  - Maximum 10 concurrent tasks per worker
+- **Time Randomization**: Scheduled times are randomized within the next 7 days
+- **Location Randomization**: Task locations are randomized within Karnataka state bounds (lat: 11.5-18.5, lng: 74.0-78.5)
+- **Deterministic Logic**: Uses rule-based logic with controlled randomness for explainable decisions
+- **Decision Logging**: All AI decisions are logged with reasons for transparency
+
+### Limits & Constraints
+
+- No ML libraries or external APIs used
+- Pure rule-based system with seeded randomness
+- All operations run locally on localhost
+- Workers are pre-seeded (10 workers available)
+- System prevents over-assignment beyond capacity limits
 
 ```
 ├── backend/

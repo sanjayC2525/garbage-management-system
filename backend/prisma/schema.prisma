@@ -11,15 +11,18 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  name     String
-  email    String @unique
-  password String
-  role     String // Admin, Worker, Citizen
+  id          Int    @id @default(autoincrement())
+  name        String
+  email       String @unique
+  password    String
+  role        String // Admin, Worker, Citizen
+  profileImage String? // Profile picture file path
 
   // Relations
   pickupRequestsAsCitizen PickupRequest[] @relation("CitizenRequests")
   pickupRequestsAsWorker  PickupRequest[] @relation("WorkerRequests")
+  garbageReports          GarbageReport[]
+  worker                  Worker?
 }
 
 model PickupRequest {
@@ -34,4 +37,51 @@ model PickupRequest {
   // Relations
   citizen User @relation("CitizenRequests", fields: [citizenId], references: [id])
   worker  User? @relation("WorkerRequests", fields: [workerId], references: [id])
+}
+
+model GarbageReport {
+  id        Int      @id @default(autoincrement())
+  imagePath String
+  latitude  Float
+  longitude Float
+  status    String   @default("REPORTED") // REPORTED, APPROVED, REJECTED
+  citizenId Int
+  createdAt DateTime @default(now())
+
+  // Relations
+  citizen User     @relation(fields: [citizenId], references: [id])
+  tasks   Task[]
+}
+
+model Task {
+  id               Int       @id @default(autoincrement())
+  garbageReportId  Int?
+  latitude         Float
+  longitude        Float
+  scheduledTime    DateTime
+  status           String    @default("ASSIGNED") // ASSIGNED, COLLECTED
+  workerId         Int
+  createdAt        DateTime  @default(now())
+
+  // Relations
+  garbageReport GarbageReport? @relation(fields: [garbageReportId], references: [id])
+  worker        Worker        @relation(fields: [workerId], references: [id])
+}
+
+model Worker {
+  id             Int     @id @default(autoincrement())
+  userId         Int     @unique
+  currentWorkload Int    @default(0)
+  maxTasks       Int     @default(10)
+
+  // Relations
+  user  User   @relation(fields: [userId], references: [id])
+  tasks Task[]
+}
+
+model AILog {
+  id        Int      @id @default(autoincrement())
+  decision  String
+  reason    String
+  timestamp DateTime @default(now())
 }

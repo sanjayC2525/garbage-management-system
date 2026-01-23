@@ -2,120 +2,110 @@ import { useState, useEffect } from 'react';
 import { api } from '../utils/api';
 import toast from 'react-hot-toast';
 
-const WorkerDashboard = ({ user, setUser }) => {
-  const [requests, setRequests] = useState([]);
-  const [routes, setRoutes] = useState([]);
+const WorkerDashboard = () => {
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    fetchRequests();
+    fetchTasks();
   }, []);
 
-  const fetchRequests = async () => {
+  const fetchTasks = async () => {
     try {
-      const response = await api.getPickupRequests();
-      setRequests(response.data);
-      // Filter routes for today
-      const today = new Date().toISOString().split('T')[0];
-      const todayRoutes = response.data.filter(req =>
-        req.status === 'Assigned' && req.pickupDate.split('T')[0] === today
-      );
-      setRoutes(todayRoutes);
+      const response = await api.getTasks();
+      setTasks(response.data);
     } catch (error) {
-      toast.error('Failed to fetch requests');
+      toast.error('Failed to fetch tasks');
     }
   };
 
-  const updateStatus = async (id, status) => {
+  const markTaskCollected = async (id) => {
     try {
-      await api.updateRequestStatus(id, status);
-      toast.success(`Request marked as ${status}`);
-      fetchRequests();
+      await api.markTaskCollected(id);
+      toast.success('Task marked as collected');
+      fetchTasks();
     } catch (error) {
-      toast.error('Failed to update status');
+      toast.error('Failed to update task');
     }
   };
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Pending': return 'text-yellow-500';
-      case 'Assigned': return 'text-blue-500';
-      case 'Collected': return 'text-green-500';
+      case 'ASSIGNED': return 'text-blue-500';
+      case 'COLLECTED': return 'text-green-500';
       default: return 'text-gray-500';
     }
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold text-primary mb-6">Worker Dashboard</h1>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-primary">Worker Dashboard</h1>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Assigned Requests */}
-        <div className="bg-darker rounded-lg overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-700">
-            <h2 className="text-xl font-bold">My Assigned Requests</h2>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-800">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Address</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Type</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-700">
-                {requests.map((request) => (
-                  <tr key={request.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">{request.address}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{request.garbageType}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{new Date(request.pickupDate).toLocaleDateString()}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`font-medium ${getStatusColor(request.status)}`}>{request.status}</span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {request.status === 'Assigned' && (
-                        <button
-                          onClick={() => updateStatus(request.id, 'Collected')}
-                          className="bg-primary hover:bg-secondary text-white font-bold py-1 px-3 rounded-md text-sm transition duration-200"
-                        >
-                          Mark Collected
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+      {/* My Assigned Tasks */}
+      <div className="bg-darker rounded-lg overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-700">
+          <h2 className="text-xl font-bold">My Assigned Tasks</h2>
         </div>
-
-        {/* Today's Route */}
-        <div className="bg-darker rounded-lg overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-700">
-            <h2 className="text-xl font-bold">Today's Route</h2>
-          </div>
-          <div className="p-6">
-            {routes.length === 0 ? (
-              <p className="text-gray-400">No pickups scheduled for today.</p>
-            ) : (
-              <ul className="space-y-4">
-                {routes.map((route, index) => (
-                  <li key={route.id} className="flex items-center justify-between bg-gray-800 p-4 rounded-md">
-                    <div>
-                      <p className="font-medium">{route.address}</p>
-                      <p className="text-sm text-gray-400">{route.garbageType}</p>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-800">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Photo</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Location</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Reported</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-700">
+              {tasks.map((task) => (
+                <tr key={task.id}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <img src={`http://localhost:5001${task.garbageReport?.imagePath}`} alt="Garbage" className="w-16 h-16 object-cover rounded" />
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm">
+                      <div>{task.latitude.toFixed(4)}, {task.longitude.toFixed(4)}</div>
+                      <a
+                        href={`https://www.google.com/maps?q=${task.latitude},${task.longitude}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:text-blue-300 text-xs"
+                      >
+                        View on Map
+                      </a>
                     </div>
-                    <div className="text-right">
-                      <p className="text-sm">{new Date(route.pickupDate).toLocaleTimeString()}</p>
-                      <span className={`text-sm font-medium ${getStatusColor(route.status)}`}>{route.status}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {new Date(task.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`font-medium ${getStatusColor(task.status)}`}>{task.status}</span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {task.status === 'ASSIGNED' && (
+                      <button
+                        onClick={() => markTaskCollected(task.id)}
+                        className="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-3 rounded-md text-sm transition duration-200"
+                      >
+                        Mark Collected
+                      </button>
+                    )}
+                    {task.status === 'COLLECTED' && (
+                      <span className="text-green-500 font-medium text-sm">✓ Completed</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {tasks.length === 0 && (
+            <div className="px-6 py-8 text-center text-gray-400">
+              No tasks assigned yet
+            </div>
+          )}
         </div>
       </div>
     </div>

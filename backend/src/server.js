@@ -15,11 +15,14 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/pickup-requests', require('./routes/pickupRequests'));
+app.use('/api/garbage-reports', require('./routes/garbageReports'));
+app.use('/api/tasks', require('./routes/tasks'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

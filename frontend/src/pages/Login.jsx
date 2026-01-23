@@ -1,8 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { login } from '../utils/auth';
 import toast from 'react-hot-toast';
+import heroImage from "../assets/images/hero.jpg";
 
-const Login = ({ setUser }) => {
+
+const Login = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
 
@@ -12,8 +16,22 @@ const Login = ({ setUser }) => {
 
     try {
       const response = await login(formData.email, formData.password);
-      setUser(response.user);
       toast.success('Login successful!');
+
+      // Redirect based on role
+      switch (response.user.role) {
+        case 'Admin':
+          navigate('/admin');
+          break;
+        case 'Citizen':
+          navigate('/citizen');
+          break;
+        case 'Worker':
+          navigate('/worker');
+          break;
+        default:
+          navigate('/login');
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || 'Login failed');
     } finally {
@@ -28,6 +46,7 @@ const Login = ({ setUser }) => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-dark">
       <div className="bg-darker p-8 rounded-lg shadow-lg w-full max-w-md">
+        <img src={heroImage} alt="Hero" className="w-[500px] h-[300px] object-cover rounded-md mb-6" />
         <h2 className="text-2xl font-bold text-center mb-6 text-primary">Garbage Management System</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
