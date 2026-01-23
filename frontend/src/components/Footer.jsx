@@ -6,7 +6,7 @@ import footerBg from '../assets/images/footer-bg.png';
 const Footer = () => {
   const footerConfig = {
     name: 'Garbage Management System',
-    email: 'support@gms.com',
+    email: 'sanjaycs483@gmail.com',
     description: 'Efficient waste management for cleaner communities',
     year: new Date().getFullYear(),
   };
@@ -54,7 +54,7 @@ const Footer = () => {
           {/* Footer Bottom */}
           <div className="border-t border-gray-700 mt-8 pt-6 text-center">
             <p className="text-gray-500 text-xs">
-              Built with React & Node.js for efficient waste management
+              Built By Sanjay C with React & Node.js for efficient waste management
             </p>
           </div>
         </div>

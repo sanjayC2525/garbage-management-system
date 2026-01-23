@@ -32,7 +32,6 @@ const Header = () => {
     const file = event.target.files[0];
     if (!file) return;
 
-    // Validate file size (1MB limit)
     if (file.size > 1024 * 1024) {
       toast.error('Image size must be less than 1MB');
       return;
@@ -54,37 +53,49 @@ const Header = () => {
   return (
     <header className="bg-darker border-b border-gray-700 px-6 py-4">
       <div className="flex justify-between items-center">
+        
         {/* App Name */}
         <div className="flex items-center space-x-4">
           <h1 className="text-xl font-bold text-primary">GMS</h1>
-          <span className="text-sm text-gray-400 hidden sm:block">Garbage Management System</span>
+          <span className="text-sm text-gray-400 hidden sm:block">
+            Garbage Management System
+          </span>
         </div>
 
         {/* User Profile Section */}
         <div className="flex items-center space-x-4">
           {user && (
             <>
-              <span className="text-sm text-gray-300 hidden md:block">
-                Welcome, {user.name}
-              </span>
+              {/* ✅ YOUR REQUESTED STATIC BLOCK */}
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-300">
+                  Welcome, Admin User
+                </span>
 
-              {/* Profile Image with Dropdown */}
+                <img
+                  src="/src/assets/images/default-avatar.svg"
+                  alt="Profile"
+                  className="w-9 h-9 rounded-full object-cover border border-gray-600"
+                />
+              </div>
+
+              {/* Existing Profile Dropdown (UNCHANGED) */}
               <div className="relative">
                 <button
                   onClick={() => setShowProfileMenu(!showProfileMenu)}
                   className="flex items-center space-x-2 focus:outline-none"
                 >
                   <img
-                    src={user.profileImage ? `http://localhost:5001${user.profileImage}` : '/default-avatar.png'}
+                    src={
+                      user.profileImage
+                        ? `http://localhost:5001${user.profileImage}`
+                        : '/default-avatar.svg'
+                    }
                     alt="Profile"
                     className="w-8 h-8 rounded-full object-cover border-2 border-primary"
-                    onError={(e) => {
-                      e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiMzNzM3MzkiLz4KPHBhdGggZD0iTTE2IDE2QzE4LjIxIDE2IDIwIDE0LjIxIDIwIDEyQzIwIDEwLjc5IDE4LjIxIDkgMTYgOUMxMy43OSA5IDEyIDEwLjc5IDEyIDEyQzEyIDE0LjIxIDEzLjc5IDE2IDE2WiIgc3Ryb2tlPSIjOWNhM2FmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8cGF0aCBkPSJNMTAgMjJDMTAgMTkuMzkgMTEuNzkgMTggMTQgMThIMThDMTkuMzkgMTggMjEgMTkuMzkgMjEgMjJWMTguNUMyMSAxNy4xMiAxOS43NSAxNiAxOC4zNSAxNkMxNiAxNiAxNC42NSAxNy4xMiAxNC42NSAxOC41VjIySDEwWiIgc3Ryb2tlPSIjOWNhM2FmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4=';
-                    }}
                   />
                 </button>
 
-                {/* Profile Dropdown Menu */}
                 {showProfileMenu && (
                   <div className="absolute right-0 mt-2 w-48 bg-darker border border-gray-700 rounded-md shadow-lg z-50">
                     <div className="py-1">
