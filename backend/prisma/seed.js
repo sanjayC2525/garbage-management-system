@@ -4,20 +4,16 @@ const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🧹 Cleaning database for fresh demo...');
+  console.log('🧹 COMPLETE DATABASE RESET - Removing everything...');
   
-  // Clean up existing data
+  // Delete ALL data in correct order to avoid foreign key constraints
   await prisma.task.deleteMany({});
   await prisma.garbageReport.deleteMany({});
   await prisma.pickupRequest.deleteMany({});
   await prisma.worker.deleteMany({});
-  await prisma.user.deleteMany({
-    where: {
-      email: {
-        notIn: ['admin@example.com', 'citizen@example.com']
-      }
-    }
-  });
+  await prisma.user.deleteMany({});
+
+  console.log('✅ All data deleted successfully');
 
   // Hash passwords
   const adminPassword = await bcrypt.hash('admin123', 10);
@@ -25,10 +21,8 @@ async function main() {
   const citizenPassword = await bcrypt.hash('password', 10);
 
   // Create admin user
-  const admin = await prisma.user.upsert({
-    where: { email: 'admin@example.com' },
-    update: {},
-    create: {
+  const admin = await prisma.user.create({
+    data: {
       name: 'Admin User',
       email: 'admin@example.com',
       password: adminPassword,
@@ -36,13 +30,11 @@ async function main() {
     },
   });
 
-  // Create 5 worker users (clean number for demo)
+  // Create 3 worker users (clean number for demo)
   const workers = [];
-  for (let i = 1; i <= 5; i++) {
-    const worker = await prisma.user.upsert({
-      where: { email: `worker${i}@example.com` },
-      update: {},
-      create: {
+  for (let i = 1; i <= 3; i++) {
+    const worker = await prisma.user.create({
+      data: {
         name: `Worker ${i}`,
         email: `worker${i}@example.com`,
         password: workerPassword,
@@ -53,10 +45,8 @@ async function main() {
   }
 
   // Create citizen user
-  const citizen = await prisma.user.upsert({
-    where: { email: 'citizen@example.com' },
-    update: {},
-    create: {
+  const citizen = await prisma.user.create({
+    data: {
       name: 'John Citizen',
       email: 'citizen@example.com',
       password: citizenPassword,
@@ -66,70 +56,29 @@ async function main() {
 
   // Create Worker entries for each worker user
   for (const worker of workers) {
-    await prisma.worker.upsert({
-      where: { userId: worker.id },
-      update: {},
-      create: {
+    await prisma.worker.create({
+      data: {
         userId: worker.id,
       },
     });
   }
 
-  // Create 3 fresh pending garbage reports for demo
-  const sampleReports = [
-    {
-      imagePath: '/uploads/garbage-sample-1.jpg',
-      latitude: 12.9716,
-      longitude: 77.5946,
-      status: 'REPORTED',
-      citizenId: citizen.id,
-      address: '123 Main St, Bangalore',
-      notes: 'Large pile of garbage near the bus stop',
-      statusHistory: JSON.stringify([
-        { status: 'REPORTED', timestamp: new Date().toISOString(), note: 'Report submitted by citizen' }
-      ])
-    },
-    {
-      imagePath: '/uploads/garbage-sample-2.jpg',
-      latitude: 12.9352,
-      longitude: 77.6245,
-      status: 'REPORTED',
-      citizenId: citizen.id,
-      address: '456 Oak Avenue, Bangalore',
-      notes: 'Overflowing garbage bin',
-      statusHistory: JSON.stringify([
-        { status: 'REPORTED', timestamp: new Date().toISOString(), note: 'Report submitted by citizen' }
-      ])
-    },
-    {
-      imagePath: '/uploads/garbage-sample-3.jpg',
-      latitude: 13.0128,
-      longitude: 77.5693,
-      status: 'REPORTED',
-      citizenId: citizen.id,
-      address: '789 Pine Road, Bangalore',
-      notes: 'Construction debris blocking sidewalk',
-      statusHistory: JSON.stringify([
-        { status: 'REPORTED', timestamp: new Date().toISOString(), note: 'Report submitted by citizen' }
-      ])
-    }
-  ];
+  console.log('👥 Created fresh users:');
+  console.log(`   - 1 Admin: ${admin.email}`);
+  console.log(`   - 3 Workers: ${workers.map(w => w.email).join(', ')}`);
+  console.log(`   - 1 Citizen: ${citizen.email}`);
 
-  await prisma.garbageReport.createMany({
-    data: sampleReports
-  });
-
-  console.log('✨ Database cleaned and seeded with fresh demo data!');
-  console.log('📊 Created:');
-  console.log(`   - 1 Admin user`);
-  console.log(`   - 5 Worker users`);
-  console.log(`   - 1 Citizen user`);
-  console.log(`   - 3 Pending garbage reports (ready for assignment)`);
-  console.log(`   - 0 Tasks (clean slate)`);
   console.log('');
-  console.log('🚀 Ready for demo! Login with:');
+  console.log('✨ Database is now COMPLETELY CLEAN!');
+  console.log('📊 Status:');
+  console.log(`   - 0 Garbage Reports`);
+  console.log(`   - 0 Tasks`);
+  console.log(`   - 0 Pickup Requests`);
+  console.log(`   - Fresh user accounts ready`);
+  console.log('');
+  console.log('🚀 Ready for fresh start! Login with:');
   console.log('   Admin: admin@example.com / admin123');
-  console.log('   Workers: worker1@example.com / password (workers 1-5)');
+  console.log('   Workers: worker1@example.com / password (workers 1-3)');
   console.log('   Citizen: citizen@example.com / password');
 }
 

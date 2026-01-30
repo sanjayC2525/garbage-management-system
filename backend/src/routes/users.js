@@ -107,6 +107,13 @@ router.put('/:id', authenticateToken, authorizeRoles('Admin'), async (req, res) 
 // Upload/Update profile image (All authenticated users)
 router.post('/profile-image', authenticateToken, profileImageUpload.single('profileImage'), async (req, res) => {
   try {
+    console.log('📸 Profile image upload request:', {
+      userId: req.user.id,
+      file: req.file ? req.file.filename : 'No file',
+      mimetype: req.file?.mimetype,
+      size: req.file?.size
+    });
+
     if (!req.file) {
       return res.status(400).json({ message: 'No image file provided' });
     }
@@ -121,6 +128,7 @@ router.post('/profile-image', authenticateToken, profileImageUpload.single('prof
       const oldImagePath = path.join(__dirname, '../../uploads/profile-images', path.basename(user.profileImage));
       if (fs.existsSync(oldImagePath)) {
         fs.unlinkSync(oldImagePath);
+        console.log('🗑️ Deleted old profile image:', user.profileImage);
       }
     }
 
@@ -131,12 +139,17 @@ router.post('/profile-image', authenticateToken, profileImageUpload.single('prof
       select: { id: true, name: true, email: true, role: true, profileImage: true },
     });
 
+    console.log('✅ Profile image updated successfully:', {
+      userId: updatedUser.id,
+      profileImage: updatedUser.profileImage
+    });
+
     res.json({
       message: 'Profile image updated successfully',
       user: updatedUser,
     });
   } catch (error) {
-    console.error('Profile image upload error:', error);
+    console.error('❌ Profile image upload error:', error);
     res.status(500).json({ message: 'Failed to upload profile image' });
   }
 });

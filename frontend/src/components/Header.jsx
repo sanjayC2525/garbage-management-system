@@ -32,6 +32,12 @@ const Header = () => {
     const file = event.target.files[0];
     if (!file) return;
 
+    console.log('📸 Frontend: Starting profile image upload:', {
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type
+    });
+
     if (file.size > 1024 * 1024) {
       toast.error('Image size must be less than 1MB');
       return;
@@ -41,11 +47,15 @@ const Header = () => {
     formData.append('profileImage', file);
 
     try {
+      console.log('📤 Frontend: Sending upload request...');
       const response = await api.uploadProfileImage(formData);
+      console.log('✅ Frontend: Upload response:', response.data);
+      
       setUser(response.data.user);
       toast.success('Profile image updated successfully!');
       setShowProfileMenu(false);
     } catch (error) {
+      console.error('❌ Frontend: Upload error:', error.response?.data);
       toast.error(error.response?.data?.message || 'Failed to upload profile image');
     }
   };
@@ -68,7 +78,7 @@ const Header = () => {
                   <img
                     src={
                       user.profileImage
-                        ? `${user.profileImage}`
+                        ? `http://localhost:5001${user.profileImage}`
                         : '/default-avatar.svg'
                     }
                     alt="Profile"
