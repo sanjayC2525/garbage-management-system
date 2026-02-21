@@ -26,29 +26,85 @@ const CitizenDashboard = () => {
     }
   };
 
-  const getLocation = () => {
-    setLocationLoading(true);
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setReportFormData({
-            ...reportFormData,
-            latitude: position.coords.latitude.toString(),
-            longitude: position.coords.longitude.toString(),
-          });
-          setLocationLoading(false);
-          toast.success('Location captured!');
-        },
-        (error) => {
-          console.error('Error getting location:', error);
-          toast.error('Failed to get location. Please enter manually.');
-          setLocationLoading(false);
-        }
-      );
-    } else {
-      toast.error('Geolocation is not supported by this browser.');
-      setLocationLoading(false);
+  const getLocation = async () => {
+    // Check if we're on HTTPS (required for geolocation in most browsers)
+    if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+      toast.error('Location services require a secure connection (HTTPS). Please use HTTPS or localhost for development.');
+      return;
     }
+
+    if (!navigator.geolocation) {
+      toast.error('Geolocation is not supported by your browser. Please update your browser or use manual location entry.');
+      return;
+    }
+
+    // Check if permission is already denied
+    if (navigator.permissions) {
+      try {
+        const result = await navigator.permissions.query({ name: 'geolocation' });
+        if (result.state === 'denied') {
+          toast.error('Location permission denied. Please enable location services in your browser settings and refresh the page.');
+          return;
+        }
+      } catch (error) {
+        // Permissions API not supported, proceed with location request
+        console.log('Permissions API not supported, proceeding with location request');
+      }
+    }
+
+    requestLocation();
+  };
+
+  const requestLocation = () => {
+    setLocationLoading(true);
+    toast.loading('Getting your location...', { id: 'location-toast' });
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude, accuracy } = position.coords;
+        setReportFormData({
+          ...reportFormData,
+          latitude: latitude.toString(),
+          longitude: longitude.toString(),
+        });
+        setLocationLoading(false);
+        toast.dismiss('location-toast');
+        toast.success(`Location found! Accuracy: ±${Math.round(accuracy)}m`);
+      },
+      (error) => {
+        setLocationLoading(false);
+        toast.dismiss('location-toast');
+
+        let errorMessage = 'Unable to get location';
+        let actionMessage = '';
+
+        switch(error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = 'Location access denied';
+            actionMessage = 'Please enable location services in your browser settings and click "Allow" when prompted.';
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = 'Location information unavailable';
+            actionMessage = 'Please check your GPS/network connection and try again.';
+            break;
+          case error.TIMEOUT:
+            errorMessage = 'Location request timed out';
+            actionMessage = 'Please try again. Make sure you\'re outdoors with a clear view of the sky.';
+            break;
+          default:
+            errorMessage = 'Location error occurred';
+            actionMessage = 'Please try again or enter location manually.';
+        }
+
+        toast.error(`${errorMessage}. ${actionMessage}`, { duration: 6000 });
+        console.error('Geolocation error:', error);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000, // Increased timeout
+        maximumAge: 30000 // Allow cached positions up to 30 seconds old
+      }
+    );
   };
 
   const handleReportSubmit = async (e) => {

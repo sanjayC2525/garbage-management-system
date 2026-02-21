@@ -2,63 +2,48 @@ import React from 'react';
 import Timeline from './Timeline';
 import { getStatusBadge, formatDate } from '../utils/statusHelpers';
 
-const Modal = ({ isOpen, onClose, title, children, wide = false }) => {
+const Modal = ({ isOpen, onClose, title, children, wide = false, size = 'md' }) => {
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        {/* Background overlay */}
-        <div 
-          className="fixed inset-0 transition-opacity modal-overlay"
-          onClick={onClose}
-        >
-          <div className="absolute inset-0 bg-gray-900 opacity-75"></div>
-        </div>
+  const sizeClasses = {
+    sm: 'max-w-md',
+    md: 'max-w-lg', 
+    lg: 'max-w-4xl'
+  };
 
-        {/* Modal panel */}
-        <div className="inline-block align-bottom bg-darker rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full modal-content">
-          {wide && (
-            <div className="hidden sm:block sm:max-w-2xl sm:w-full">
-              <div className="inline-block align-bottom bg-darker rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-                <ModalContent title={title} onClose={onClose}>
-                  {children}
-                </ModalContent>
-              </div>
+  return (
+    <>
+      {/* Background overlay */}
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in">
+        <div className={`bg-background rounded-2xl shadow-large border border-border ${sizeClasses[size]} w-full mx-4 relative max-h-[90vh] overflow-hidden`}>
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 z-10 p-2 text-text-muted hover:text-text-primary hover:bg-surface rounded-full transition-all duration-200"
+            aria-label="Close modal"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {/* Header */}
+          {title && (
+            <div className="p-6 border-b border-border">
+              <h2 className="text-xl font-semibold text-text-primary pr-8">
+                {title}
+              </h2>
             </div>
           )}
-          
-          {!wide && (
-            <ModalContent title={title} onClose={onClose}>
-              {children}
-            </ModalContent>
-          )}
+
+          {/* Body */}
+          <div className="overflow-y-auto max-h-[calc(90vh-8rem)]">
+            {children}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
-
-const ModalContent = ({ title, onClose, children }) => (
-  <>
-    {/* Header */}
-    <div className="flex items-center justify-between p-4 border-b border-gray-700">
-      <h3 className="text-lg font-semibold text-white">{title}</h3>
-      <button
-        onClick={onClose}
-        className="text-gray-400 hover:text-gray-200 transition-colors"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
-
-    {/* Content */}
-    <div className="p-6">
-      {children}
-    </div>
-  </>
-);
 
 export default Modal;
