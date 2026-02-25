@@ -1,246 +1,217 @@
-# 🗑️ Garbage Management System
+# Garbage Management System
 
-<div align="center">
+A prototype web application for managing garbage collection requests with role-based workflow and status tracking.
 
-![Node.js](https://img.shields.io/badge/Node.js-18+-green?style=flat-square&logo=node.js)
-![React](https://img.shields.io/badge/React-18+-blue?style=flat-square&logo=react)
-![Prisma](https://img.shields.io/badge/Prisma-5+-purple?style=flat-square&logo=prisma)
-![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
-![Status](https://img.shields.io/badge/Status-Complete-brightgreen?style=flat-square)
+## Project Status
 
-*A production-ready full-stack web application for managing garbage collection requests with complete role-based workflow, real-time updates, and intelligent worker assignment.*
+**Status: Prototype / In Development**  
+**Not Production-Ready**
 
-</div>
+This is a functional prototype demonstrating core garbage management workflows. The system contains bugs, incomplete features, and requires significant development before production use.
 
----
+## Features
 
-## 📋 Table of Contents
-- [Features](#-features)
-- [Security Status](#-security-status)
-- [Quick Start](#-quick-start)
-- [Known Issues](#-known-issues)
-- [Tech Stack](#-tech-stack)
-- [Limitations](#-limitations)
+### Working Features
+- User authentication with JWT tokens and role-based access control
+- Citizens can submit garbage reports with photos and GPS location
+- Admin dashboard for reviewing and managing reports
+- Worker task assignment and basic workflow management
+- Feedback and issue submission system with single-reply constraint
+- File upload functionality for report photos and proof of work
+- Basic analytics and reporting for admin users
+- Mobile-responsive web interface
 
----
+### Partially Working / Buggy Features
+- Admin dashboard: Some views show blank data or fail to load
+- Feedback system: Admin replies may not reflect immediately in UI
+- Worker statistics: Performance metrics do not update in real-time
+- Status synchronization: Pending states may not refresh across sessions
+- Real-time notifications: Implemented with polling, not WebSocket
+- Location services: Basic GPS integration without route optimization
 
-## ✨ Features
+### Not Implemented
+- WebSocket real-time updates
+- Advanced analytics and AI-powered assignment
+- Route optimization for workers
+- Mobile native applications
+- Email notifications system
+- Multi-tenant support
+- Advanced reporting and export features
 
-### 🟢 Working Features
-- **🔐 Authentication**: JWT-based login/logout system with secure session management
-- **👥 Role-based Access**: Admin, Worker, Citizen roles with granular permissions
-- **📝 Report Submission**: Citizens submit garbage reports with photos & GPS location
-- **📊 Admin Dashboard**: Complete management interface with analytics and reporting
-- **📈 Worker Stats**: Real-time workload statistics and performance metrics
-- **👷 Worker Workflow**: Accept → In Progress → Complete → Unable task lifecycle
-- **✅ Task Completion**: Workers can mark tasks as in-progress and completed
-- **🔄 Status Updates**: Real-time status synchronization across all roles
-- **📋 Report Management**: Full approval/rejection/assignment workflow
-- **🗺️ Location Services**: GPS integration for garbage reports with map links
-- **📱 Responsive Design**: Works on desktop and mobile devices
-- **💬 Feedback System**: Citizens can submit feedback and issues to admins
-- **🔔 Notifications**: Real-time notifications for all system events
-- **📸 Proof of Work**: Workers upload before/after photos as task completion proof
-- **📊 Analytics Dashboard**: Comprehensive admin analytics with KPIs and trends
-- **👤 Worker Performance**: Individual worker metrics and efficiency tracking
-- **📋 Audit Logs**: Complete system activity tracking for security and compliance
-- **⚠️ Issue Resolution**: Dispute resolution workflow for rejected reports
-- **🔄 Auto Reassignment**: Tasks automatically reassigned when workers are unable
+## Role-wise Features
 
-### 🟡 Partially Working / Buggy
-- None - All features are fully functional
+### Citizen Features
+- Submit garbage reports with photos and location
+- View report history and status updates
+- Submit feedback and issues to administrators
+- Receive notifications about report status changes
 
-### 🔴 Not Implemented
-- **� Mobile App** (web app is mobile-responsive)
-- **🚀 WebSocket Integration** (polling-based notifications implemented)
-- **�️ Route Optimization** (basic GPS implemented)
-- **� Advanced AI Analytics** (basic analytics implemented)
+### Worker Features
+- View assigned tasks and work orders
+- Update task status (accept, in-progress, complete)
+- Upload before/after photos as proof of work
+- View basic performance metrics
 
----
+### Admin Features
+- Review and approve/reject citizen reports
+- Assign workers to reports and tasks
+- Monitor system analytics and statistics
+- Manage user accounts and permissions
+- Handle citizen feedback and issues
+- View audit logs and system activity
 
-## 👥 Role-wise Features
+## Security & Privacy
 
-### 👤 Citizen Features
-- **📝 Report Submission**: Submit garbage reports with photos and GPS location
-- **📊 Report History**: View all submitted reports with status tracking
-- **💬 Feedback System**: Submit complaints, suggestions, and compliments with admin replies
-- **⚠️ Issue Reporting**: File disputes and service issues with resolution tracking
-- **🔔 Notifications**: Real-time updates on report status and feedback responses
-- **📱 Mobile Friendly**: Responsive design for mobile devices
-- **📋 Feedback History**: View submitted feedback with admin responses and status updates
+### Known Security Risks
+- Demo credentials: Hardcoded passwords in development seed file
+- User data logging: Console logs may contain emails, IDs, and request data
+- Development CORS: Open localhost configuration only
+- Token storage: Uses localStorage without secure HttpOnly cookies
+- Uploads directory: User-generated files stored locally
+- Authentication: Basic JWT implementation without refresh tokens
 
-### 👷 Worker Features
-- **📋 Task Management**: View assigned tasks with detailed information
-- **✅ Task Workflow**: Accept → In Progress → Complete → Unable lifecycle
-- **📸 Proof Upload**: Upload before/after photos as completion proof
-- **📊 Performance Metrics**: Track personal efficiency and completion rates
-- **🗺️ Location Services**: View task locations with map integration
-- **🔔 Notifications**: Real-time task assignments and updates
-- **⚠️ Unable Reports**: Report issues preventing task completion
+### Privacy Considerations
+- User data logged in development mode
+- File uploads stored without encryption
+- No data anonymization or retention policies
+- Basic audit logging without privacy controls
 
-### 👑 Admin Features
-- **📊 Analytics Dashboard**: Comprehensive KPIs and system analytics
-- **👥 User Management**: Create, update, and manage all user accounts
-- **📝 Report Management**: Review, approve, reject, and assign garbage reports
-- **👤 Worker Performance**: Monitor individual and team performance metrics
-- **💬 Feedback Management**: Handle citizen feedback with replies and status updates
-- **⚠️ Issue Resolution**: Manage disputes and service issues with resolution tracking
-- **📋 Audit Logs**: Complete system activity tracking and compliance
-- **📈 System Health**: Monitor overall system performance and statistics
-- **🔄 Task Reassignment**: Handle unable tasks and reassign to other workers
-- **📊 Proof Review**: Review worker proof of work submissions
-- **🔔 System Notifications**: Send announcements and updates
-- **📋 Feedback Analytics**: Track feedback types, categories, and resolution rates
+## Known Issues
 
----
+### Current Bugs
+- Admin dashboard displays blank views in some sections
+- Feedback replies do not immediately reflect in the interface
+- Worker statistics fail to update in real-time
+- Pending report states do not refresh across browser sessions
+- Status synchronization issues between different user roles
+- Mobile responsive layout breaks on some screen sizes
+- File upload validation is incomplete
 
-## 🛡️ Security & Privacy
+### Limitations
+- SQLite database not suitable for production scale
+- No automated tests or error handling
+- Limited concurrent user support
+- Basic error messages without user guidance
+- No backup or recovery mechanisms
 
-| Level | Issues |
-|-------|---------|
-| **🔴 Critical** | Hardcoded demo passwords in seed file |
-| **🟡 Medium** | Vulnerable dependencies, CORS config |
-| **🟢 Low** | Debug logs, auth checks are secure |
+## Setup (Development Only)
 
-> ⚠️ **Run `npm audit fix` before production**
+### Prerequisites
+- Node.js 18+
+- npm or yarn
 
----
-
-## 🚀 Quick Start
+### Installation
 
 ```bash
-# 1. Install dependencies
+# Clone repository
+git clone https://github.com/sanjayC2525/garbage-management-system.git
+cd garbage-management-system
+
+# Install dependencies
 npm install
 cd backend && npm install
 cd ../frontend && npm install
 
-# 2. Setup environment
-cp .env.example .env
-# Edit .env with your JWT_SECRET and DATABASE_URL
-
-# 3. Setup database
+# Setup environment
 cd backend
-npm run db:migrate
-npm run db:seed
+cp .env.example .env
+# Edit .env with your configuration (see .env.example for variables)
 
-# 4. Start servers
+# Setup database
+npx prisma migrate dev
+npx prisma db:seed
+
+# Start development servers
+cd ..
 npm run dev
 ```
 
-**Access Points:**
-- 🌐 Frontend: http://localhost:5173
-- 🔌 Backend: http://localhost:5001
+### Access Points
+- Frontend: http://localhost:5173
+- Backend: http://localhost:5001
 
-**Demo Accounts:**
-- 👑 Admin: `admin@example.com` / `admin123`
-- 👷 Worker: `worker1@example.com` / `password`
-- 👤 Citizen: `citizen@example.com` / `password`
+### Demo Accounts
+- Admin: admin@example.com
+- Workers: worker1@example.com, worker2@example.com, worker3@example.com
+- Citizen: citizen@example.com
 
----
+Note: Check your .env file for actual demo passwords.
 
-## ⚠️ Known Issues
+## Repository Safety Notes
 
-- No critical issues - all core functionality is working
-- Development-only setup (production deployment requires configuration)
-- SQLite database (can be migrated to PostgreSQL for production)
-- CORS configured for development (adjust for production domains)
+### Files That Must NOT Be Committed
+- `.env` files (contain secrets and credentials)
+- `backend/uploads/` directory (user-generated files)
+- `backend/prisma/dev.db` (development database)
+- Any files with secrets, tokens, or private keys
 
----
+### Security Practices
+- Never commit credentials or API keys
+- Use environment variables for all configuration
+- Exclude user-generated content from version control
+- Review all code changes for sensitive data exposure
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-<div align="center">
+### Backend
+- Node.js with Express.js
+- Prisma ORM with SQLite database
+- JWT authentication with bcrypt
+- Multer for file uploads
 
-| Backend | Frontend | Database | Auth |
-|---------|----------|----------|------|
-| Node.js | React | SQLite | JWT |
-| Express | Vite | Prisma | bcrypt |
-| Multer | TailwindCSS |  |  |
+### Frontend
+- React with Vite build tool
+- TailwindCSS for styling
+- Axios for HTTP requests
+- React Hot Toast for notifications
 
-</div>
+### Development Tools
+- npm for package management
+- Prisma Migrate for database changes
+- Concurrently for running multiple processes
 
----
+## Database Schema
 
-## 📏 Current Limitations
+- Users: Authentication and role management
+- GarbageReports: Citizen reports with status tracking
+- Tasks: Worker assignments with workflow states
+- Feedback: Citizen feedback with admin replies
+- Issues: Disputes and service issues
+- Notifications: System notifications
+- AuditLogs: Activity tracking
+- Workers: Worker profiles and performance data
 
-- 🗄️ **Database**: Uses SQLite for development (easily migratable to PostgreSQL)
-- 🧪 **Testing**: Manual testing (automated tests can be added)
-- 🔄 **Real-time**: Polling-based notifications (WebSocket implementation optional)
-- 📊 **Analytics**: Basic statistics (advanced analytics can be extended)
-- 🚀 **Deployment**: Requires environment configuration for production
-- 📱 **Mobile**: Web app only (mobile app can be developed)
-- 🗺️ **Route Optimization**: Basic GPS (advanced routing can be added)
-- 🤖 **AI Features**: Manual assignment (AI assignment can be implemented)
+## Contributing
 
----
+### Development Guidelines
+- Follow existing code style and patterns
+- Add error handling for new features
+- Test all role-based functionality
+- Update documentation for API changes
 
-## 🏗️ System Architecture
+### Areas for Contribution
+- Automated testing implementation
+- WebSocket real-time updates
+- Advanced analytics features
+- Mobile optimization
+- Security hardening
+- Performance optimization
 
-### 📊 Database Schema
-- **Users**: Authentication and role management
-- **GarbageReports**: Citizen reports with status tracking
-- **Tasks**: Worker assignments with workflow states
-- **Feedback**: Citizen feedback and complaints
-- **Issues**: Disputes and service issues
-- **Notifications**: Real-time system notifications
-- **AuditLogs**: Complete activity tracking
-- **Workers**: Worker profiles and performance data
+## Architecture Notes
 
-### 🔧 Technology Stack
-- **Backend**: Node.js, Express, Prisma ORM
-- **Frontend**: React, Vite, TailwindCSS
-- **Database**: SQLite (development), PostgreSQL (production)
-- **Authentication**: JWT with role-based access
-- **File Storage**: Local filesystem with multer
-- **Real-time**: Polling-based notifications
+### Workflow States
+- Reports: REPORTED → APPROVED → ASSIGNED → IN_PROGRESS → COMPLETED
+- Tasks: ASSIGNED → ACCEPTED → IN_PROGRESS → COMPLETED/UNABLE
+- Feedback: OPEN → IN_PROGRESS → RESOLVED/REJECTED
+- Issues: PENDING → IN_REVIEW → RESOLVED/REJECTED
 
-### 🔄 Workflow States
-- **Reports**: REPORTED → APPROVED → ASSIGNED → IN_PROGRESS → COMPLETED
-- **Tasks**: ASSIGNED → ACCEPTED → IN_PROGRESS → COMPLETED/UNABLE
-- **Feedback**: OPEN → IN_PROGRESS → RESOLVED/REJECTED
-- **Issues**: PENDING → IN_REVIEW → RESOLVED/REJECTED
-
----
-
-## 📈 System Capabilities
-
-### 🎯 Core Functionality
-- ✅ **Multi-role System**: Citizens, Workers, and Admins with distinct interfaces
-- ✅ **Complete Workflow**: From report submission to task completion
-- ✅ **Real-time Updates**: Status synchronization across all roles
-- ✅ **Performance Tracking**: Individual and team metrics
-- ✅ **Audit Trail**: Complete system activity logging
-- ✅ **Mobile Responsive**: Works on all device sizes
-
-### 📊 Analytics & Reporting
-- ✅ **Admin Dashboard**: Comprehensive system analytics
-- ✅ **Worker Performance**: Individual efficiency metrics
-- ✅ **System Health**: Real-time system statistics
-- ✅ **Trend Analysis**: Time-based performance data
-- ✅ **Export Capabilities**: CSV export for compliance
-
-### 🔒 Security & Compliance
-- ✅ **Role-based Access**: Granular permissions by role
-- ✅ **Audit Logging**: Complete activity tracking
-- ✅ **Secure Authentication**: JWT-based session management
-- ✅ **Data Validation**: Input sanitization and validation
-- ✅ **File Upload Security**: Image validation and size limits
+### Current Limitations
+- Single-organization deployment only
+- Limited scalability with SQLite
+- No multi-language support
+- Basic error handling and logging
+- Development-focused configuration
 
 ---
 
-## 📝 Development Notes
-
-> 💡 **Tip**: After assigning workers, refresh the admin dashboard to see updated stats. The worker cards show real-time data from the database.
-
-> ⚠️ **Warning**: This project uses hardcoded demo credentials. Never use these passwords in production!
-
----
-
-<div align="center">
-
-**Built with ❤️ using React, Node.js, and Prisma**
-
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/garbage-management?style=social)](https://github.com/yourusername/garbage-management)
-[![GitHub forks](https://img.shields.io/github/forks/yourusername/garbage-management?style=social)](https://github.com/yourusername/garbage-management)
-
-</div>
+Built with React, Node.js, and Prisma for demonstration purposes.
