@@ -15,10 +15,17 @@ async function main() {
 
   console.log('✅ All data deleted successfully');
 
-  // Hash passwords
-  const adminPassword = await bcrypt.hash('admin123', 10);
-  const workerPassword = await bcrypt.hash('password', 10);
-  const citizenPassword = await bcrypt.hash('password', 10);
+  // SECURITY: Use environment variables for demo passwords
+  // Default to secure random hashes if not provided (development only)
+  const adminPassword = await bcrypt.hash(process.env.DEMO_ADMIN_PASSWORD || 'admin_demo_change_me', 10);
+  const workerPassword = await bcrypt.hash(process.env.DEMO_WORKER_PASSWORD || 'worker_demo_change_me', 10);
+  const citizenPassword = await bcrypt.hash(process.env.DEMO_CITIZEN_PASSWORD || 'citizen_demo_change_me', 10);
+
+  // PROTECTION: Disable demo accounts in production
+  if (process.env.NODE_ENV === 'production' && !process.env.DEMO_ADMIN_PASSWORD) {
+    console.log('🚨 Production mode detected - skipping demo account creation');
+    return;
+  }
 
   // Create admin user
   const admin = await prisma.user.create({
@@ -76,10 +83,10 @@ async function main() {
   console.log(`   - 0 Pickup Requests`);
   console.log(`   - Fresh user accounts ready`);
   console.log('');
-  console.log('🚀 Ready for fresh start! Login with:');
-  console.log('   Admin: admin@example.com / admin123');
-  console.log('   Workers: worker1@example.com / password (workers 1-3)');
-  console.log('   Citizen: citizen@example.com / password');
+  console.log('🚀 Ready for fresh start! Check environment variables for demo credentials.');
+  console.log('   Admin: admin@example.com');
+  console.log('   Workers: worker1@example.com (workers 1-3)');
+  console.log('   Citizen: citizen@example.com');
 }
 
 main()

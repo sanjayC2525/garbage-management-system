@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../utils/api';
 import toast from 'react-hot-toast';
 import ImagePreview from './ImagePreview';
+import ThemeToggle from './ThemeToggle';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -55,6 +56,9 @@ const Header = () => {
     <header className="bg-surface border-b border-border backdrop-blur-xs sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex justify-between items-center">
+          {/* Theme Toggle */}
+          <ThemeToggle />
+          
           <div className="flex-1"></div>
           
           {/* User Profile Section */}

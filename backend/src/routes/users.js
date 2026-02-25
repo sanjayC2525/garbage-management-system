@@ -36,8 +36,8 @@ const profileImageUpload = multer({
   },
 });
 
-// Get all workers (Admin only)
-router.get('/workers', authenticateToken, authorizeRoles('Admin'), async (req, res) => {
+// Get all workers (Admin and Citizen for issues form)
+router.get('/workers', authenticateToken, authorizeRoles('Admin', 'Citizen'), async (req, res) => {
   try {
     const workers = await prisma.user.findMany({
       where: { role: 'Worker' },
@@ -45,6 +45,7 @@ router.get('/workers', authenticateToken, authorizeRoles('Admin'), async (req, r
     });
     res.json(workers);
   } catch (error) {
+    console.error('Get workers error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });

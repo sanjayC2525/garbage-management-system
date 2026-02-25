@@ -3,6 +3,7 @@ import { api } from '../utils/api';
 import toast from 'react-hot-toast';
 import { getStatusBadge, formatDate } from '../utils/statusHelpers.jsx';
 import ReportDetailModal from '../components/ReportDetailModal';
+import FeedbackManagement from '../components/FeedbackManagement';
 import Skeleton from '../components/Skeleton';
 
 const AdminDashboard = () => {
@@ -170,6 +171,16 @@ const AdminDashboard = () => {
           }`}
         >
           Workers
+        </button>
+        <button
+          onClick={() => setActiveSection('feedback')}
+          className={`px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-md ${
+            activeSection === 'feedback' 
+              ? 'bg-gray-600 text-gray-300 shadow-md' 
+              : 'bg-surface hover:bg-surfaceLight text-text-primary'
+          }`}
+        >
+          Feedback & Issues
         </button>
       </div>
 
@@ -384,6 +395,10 @@ const AdminDashboard = () => {
             </div>
           )}
         </div>
+      )}
+
+      {activeSection === 'feedback' && (
+        <FeedbackManagement />
       )}
 
       {selectedImage && (

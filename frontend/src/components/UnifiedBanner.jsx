@@ -20,21 +20,14 @@ const UnifiedBanner = ({ children }) => {
       <Header />
 
       {/* Premium Banner */}
-      <div className="relative w-full h-48 md:h-56 bg-gradient-to-br from-primary via-accent to-primary/80 overflow-hidden">
-        {/* Animated background elements */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse-slow"></div>
-          <div className="absolute bottom-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-2xl animate-pulse-slow" style={{animationDelay: '1s'}}></div>
-          <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-white/5 rounded-full blur-xl"></div>
-        </div>
-        
+      <div className="relative w-full h-48 md:h-56 bg-surface overflow-hidden">
         {/* Content overlay */}
-        <div className="relative z-10 flex flex-col justify-center items-center h-full px-6">
+        <div className="flex flex-col justify-center items-center h-full px-6">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold text-text-inverse mb-2 tracking-tight animate-fade-in">
+            <h1 className="text-4xl md:text-5xl font-bold text-text-primary mb-2 tracking-tight animate-fade-in">
               {pageTitle}
             </h1>
-            <p className="text-lg md:text-xl text-text-inverse/80 font-light animate-slide-up" style={{animationDelay: '0.2s'}}>
+            <p className="text-lg md:text-xl text-text-secondary font-light animate-slide-up" style={{animationDelay: '0.2s'}}>
               Efficient waste management for cleaner communities
             </p>
           </div>

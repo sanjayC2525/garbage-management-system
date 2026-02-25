@@ -28,6 +28,14 @@ router.get('/stats', authenticateToken, authorizeRoles('Admin'), async (req, res
               in: ['ASSIGNED', 'IN_PROGRESS']
             }
           }
+        },
+        // Include assigned issues
+        issuesAsWorker: {
+          where: {
+            status: {
+              in: ['PENDING', 'IN_REVIEW'] // Active issue statuses
+            }
+          }
         }
       }
     });
@@ -47,7 +55,7 @@ router.get('/stats', authenticateToken, authorizeRoles('Admin'), async (req, res
         name: worker.name,
         email: worker.email,
         profileImage: worker.profileImage,
-        activeAssignments: (worker.worker?.tasks?.length || 0) + (worker.assignedReports?.length || 0),
+        activeAssignments: (worker.worker?.tasks?.length || 0) + (worker.assignedReports?.length || 0) + (worker.issuesAsWorker?.length || 0),
         completedAssignments: completedTasks,
         maxTasks: worker.worker?.maxTasks || 10,
         currentWorkload: worker.worker?.currentWorkload || 0,

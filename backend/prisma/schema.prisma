@@ -24,6 +24,13 @@ model User {
   garbageReports          GarbageReport[]
   worker                  Worker?
   assignedReports         GarbageReport[] @relation("WorkerAssignments")
+  feedbackAsCitizen       Feedback[] @relation("CitizenFeedback")
+  feedbackAsAdmin         Feedback[] @relation("AdminFeedback")
+  issuesAsCitizen         Issue[] @relation("CitizenIssues")
+  issuesAsWorker          Issue[] @relation("WorkerIssues")
+  issuesAsAdmin           Issue[] @relation("AdminIssues")
+  notifications           Notification[] @relation("UserNotifications")
+  auditLogs               AuditLog[] @relation("UserAuditLogs")
 }
 
 model PickupRequest {
@@ -62,6 +69,7 @@ model GarbageReport {
   citizen User     @relation(fields: [citizenId], references: [id])
   tasks   Task[]
   assignedWorker User? @relation("WorkerAssignments", fields: [assignedWorkerId], references: [id])
+  issues  Issue[] @relation("ReportIssues")
 }
 
 model Task {
@@ -70,7 +78,7 @@ model Task {
   latitude         Float
   longitude        Float
   scheduledTime    DateTime
-  status           String    @default("ASSIGNED") // ASSIGNED, IN_PROGRESS, COMPLETED
+  status           String    @default("ASSIGNED") // ASSIGNED, ACCEPTED, IN_PROGRESS, COMPLETED, UNABLE
   workerId         Int
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
@@ -78,6 +86,9 @@ model Task {
   // New fields for enhanced workflow
   statusHistory String?  // JSON string of status transitions
   completedAt    DateTime? // When task was marked completed
+  acceptedAt     DateTime? // When worker accepted the task
+  unableReason   String?  // Reason if worker is unable to complete
+  proofImage     String?  // Before/after photo proof
 
   // Relations
   garbageReport GarbageReport? @relation(fields: [garbageReportId], references: [id])
@@ -100,4 +111,80 @@ model AILog {
   decision  String
   reason    String
   timestamp DateTime @default(now())
+}
+
+model Feedback {
+  id          Int      @id @default(autoincrement())
+  type        String   // COMPLAINT, SUGGESTION, ISSUE, COMPLIMENT
+  title       String
+  description String
+  category    String   // SERVICE, WORKER, SYSTEM, OTHER
+  priority    String   @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  status      String   @default("OPEN") // OPEN, IN_PROGRESS, RESOLVED, REJECTED
+  citizenId   Int
+  adminId     Int?     // Admin assigned to handle
+  adminReply  String?  // Admin reply to citizen
+  adminNotes  String?  // Admin internal notes
+  replied     Boolean  @default(false) // Track if admin has replied
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  citizen User @relation("CitizenFeedback", fields: [citizenId], references: [id])
+  admin   User? @relation("AdminFeedback", fields: [adminId], references: [id])
+}
+
+model Issue {
+  id          Int      @id @default(autoincrement())
+  type        String   // DISPUTE, SERVICE_ISSUE, TECHNICAL
+  title       String
+  description String
+  category    String   // REPORT_REJECTED, WORKER_CONDUCT, SYSTEM_ERROR, OTHER
+  priority    String   @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  status      String   @default("PENDING") // PENDING, IN_REVIEW, RESOLVED, REJECTED
+  citizenId   Int
+  workerId    Int?     // Related worker if applicable
+  adminId     Int?     // Admin assigned to handle
+  garbageReportId Int? // Related garbage report if applicable
+  resolution  String?  // Resolution details
+  replied     Boolean  @default(false) // Track if admin has replied
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  citizen User          @relation("CitizenIssues", fields: [citizenId], references: [id])
+  worker  User?          @relation("WorkerIssues", fields: [workerId], references: [id])
+  admin   User?          @relation("AdminIssues", fields: [adminId], references: [id])
+  garbageReport GarbageReport? @relation("ReportIssues", fields: [garbageReportId], references: [id])
+}
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  title       String
+  message     String
+  type        String   // INFO, SUCCESS, WARNING, ERROR
+  category    String   // REPORT, TASK, FEEDBACK, ISSUE, SYSTEM
+  isRead      Boolean  @default(false)
+  userId      Int
+  relatedId   Int?     // ID of related entity (report, task, feedback, issue)
+  createdAt   DateTime @default(now())
+
+  // Relations
+  user User @relation("UserNotifications", fields: [userId], references: [id])
+}
+
+model AuditLog {
+  id          Int      @id @default(autoincrement())
+  action      String   // CREATE, UPDATE, DELETE, LOGIN, LOGOUT, ASSIGN, COMPLETE, etc.
+  entity      String   // USER, REPORT, TASK, FEEDBACK, ISSUE, etc.
+  entityId    Int?     // ID of the entity being acted upon
+  oldValues   String?  // JSON string of old values (for updates)
+  newValues   String?  // JSON string of new values
+  userId      Int      // User who performed the action
+  userAgent   String?  // Browser/user agent information
+  ipAddress   String?  // IP address of the user
+  timestamp   DateTime @default(now())
+  
+  // Relations
+  user User @relation("UserAuditLogs", fields: [userId], references: [id])
 }

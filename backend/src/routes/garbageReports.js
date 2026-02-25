@@ -144,7 +144,7 @@ router.put('/:id', authenticateToken, authorizeRoles('Admin'), async (req, res) 
     const { id } = req.params;
     const { action, workerId, adminNotes } = req.body; // 'approve', 'reject', 'assign', 'start', 'complete'
 
-    console.log('Update request:', { id, action, workerId, adminNotes });
+    console.log('Update request:', { id, action, hasWorkerId: !!workerId, hasAdminNotes: !!adminNotes });
 
     if (!['approve', 'reject', 'assign', 'start', 'complete'].includes(action)) {
       return res.status(400).json({ error: 'Invalid action' });

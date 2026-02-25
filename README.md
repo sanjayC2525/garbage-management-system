@@ -27,29 +27,74 @@
 ## ✨ Features
 
 ### 🟢 Working Features
-- **🔐 Authentication**: JWT-based login/logout system
-- **👥 Role-based Access**: Admin, Worker, Citizen roles
-- **📝 Report Submission**: Citizens submit garbage reports with photos & GPS
-- **📊 Admin Dashboard**: View reports, assign workers, manage users
-- **📈 Worker Stats**: Real-time workload statistics
-- **👷 Worker View**: Workers can see assigned tasks
+- **🔐 Authentication**: JWT-based login/logout system with secure session management
+- **👥 Role-based Access**: Admin, Worker, Citizen roles with granular permissions
+- **📝 Report Submission**: Citizens submit garbage reports with photos & GPS location
+- **📊 Admin Dashboard**: Complete management interface with analytics and reporting
+- **📈 Worker Stats**: Real-time workload statistics and performance metrics
+- **👷 Worker Workflow**: Accept → In Progress → Complete → Unable task lifecycle
 - **✅ Task Completion**: Workers can mark tasks as in-progress and completed
 - **🔄 Status Updates**: Real-time status synchronization across all roles
 - **📋 Report Management**: Full approval/rejection/assignment workflow
-- **🗺️ Location Services**: GPS integration for garbage reports
+- **🗺️ Location Services**: GPS integration for garbage reports with map links
 - **📱 Responsive Design**: Works on desktop and mobile devices
+- **💬 Feedback System**: Citizens can submit feedback and issues to admins
+- **🔔 Notifications**: Real-time notifications for all system events
+- **📸 Proof of Work**: Workers upload before/after photos as task completion proof
+- **📊 Analytics Dashboard**: Comprehensive admin analytics with KPIs and trends
+- **👤 Worker Performance**: Individual worker metrics and efficiency tracking
+- **📋 Audit Logs**: Complete system activity tracking for security and compliance
+- **⚠️ Issue Resolution**: Dispute resolution workflow for rejected reports
+- **🔄 Auto Reassignment**: Tasks automatically reassigned when workers are unable
 
 ### 🟡 Partially Working / Buggy
 - None - All features are fully functional
 
 ### 🔴 Not Implemented
-- **🔔 Real-time Notifications** (planned for future release)
-- **📊 Advanced Analytics** (basic stats implemented)
-- **📱 Mobile App** (web app is mobile-responsive)
+- **� Mobile App** (web app is mobile-responsive)
+- **🚀 WebSocket Integration** (polling-based notifications implemented)
+- **�️ Route Optimization** (basic GPS implemented)
+- **� Advanced AI Analytics** (basic analytics implemented)
 
 ---
 
-## 🛡️ Security Status
+## 👥 Role-wise Features
+
+### 👤 Citizen Features
+- **📝 Report Submission**: Submit garbage reports with photos and GPS location
+- **📊 Report History**: View all submitted reports with status tracking
+- **💬 Feedback System**: Submit complaints, suggestions, and compliments with admin replies
+- **⚠️ Issue Reporting**: File disputes and service issues with resolution tracking
+- **🔔 Notifications**: Real-time updates on report status and feedback responses
+- **📱 Mobile Friendly**: Responsive design for mobile devices
+- **📋 Feedback History**: View submitted feedback with admin responses and status updates
+
+### 👷 Worker Features
+- **📋 Task Management**: View assigned tasks with detailed information
+- **✅ Task Workflow**: Accept → In Progress → Complete → Unable lifecycle
+- **📸 Proof Upload**: Upload before/after photos as completion proof
+- **📊 Performance Metrics**: Track personal efficiency and completion rates
+- **🗺️ Location Services**: View task locations with map integration
+- **🔔 Notifications**: Real-time task assignments and updates
+- **⚠️ Unable Reports**: Report issues preventing task completion
+
+### 👑 Admin Features
+- **📊 Analytics Dashboard**: Comprehensive KPIs and system analytics
+- **👥 User Management**: Create, update, and manage all user accounts
+- **📝 Report Management**: Review, approve, reject, and assign garbage reports
+- **👤 Worker Performance**: Monitor individual and team performance metrics
+- **💬 Feedback Management**: Handle citizen feedback with replies and status updates
+- **⚠️ Issue Resolution**: Manage disputes and service issues with resolution tracking
+- **📋 Audit Logs**: Complete system activity tracking and compliance
+- **📈 System Health**: Monitor overall system performance and statistics
+- **🔄 Task Reassignment**: Handle unable tasks and reassign to other workers
+- **📊 Proof Review**: Review worker proof of work submissions
+- **🔔 System Notifications**: Send announcements and updates
+- **📋 Feedback Analytics**: Track feedback types, categories, and resolution rates
+
+---
+
+## 🛡️ Security & Privacy
 
 | Level | Issues |
 |-------|---------|
@@ -118,11 +163,68 @@ npm run dev
 
 ## 📏 Current Limitations
 
-- ️ **Database**: Uses SQLite for development (easily migratable to PostgreSQL)
+- 🗄️ **Database**: Uses SQLite for development (easily migratable to PostgreSQL)
 - 🧪 **Testing**: Manual testing (automated tests can be added)
-- � **Real-time**: Basic real-time updates (WebSocket implementation optional)
-- � **Analytics**: Basic statistics (advanced analytics can be extended)
-- � **Deployment**: Requires environment configuration for production
+- 🔄 **Real-time**: Polling-based notifications (WebSocket implementation optional)
+- 📊 **Analytics**: Basic statistics (advanced analytics can be extended)
+- 🚀 **Deployment**: Requires environment configuration for production
+- 📱 **Mobile**: Web app only (mobile app can be developed)
+- 🗺️ **Route Optimization**: Basic GPS (advanced routing can be added)
+- 🤖 **AI Features**: Manual assignment (AI assignment can be implemented)
+
+---
+
+## 🏗️ System Architecture
+
+### 📊 Database Schema
+- **Users**: Authentication and role management
+- **GarbageReports**: Citizen reports with status tracking
+- **Tasks**: Worker assignments with workflow states
+- **Feedback**: Citizen feedback and complaints
+- **Issues**: Disputes and service issues
+- **Notifications**: Real-time system notifications
+- **AuditLogs**: Complete activity tracking
+- **Workers**: Worker profiles and performance data
+
+### 🔧 Technology Stack
+- **Backend**: Node.js, Express, Prisma ORM
+- **Frontend**: React, Vite, TailwindCSS
+- **Database**: SQLite (development), PostgreSQL (production)
+- **Authentication**: JWT with role-based access
+- **File Storage**: Local filesystem with multer
+- **Real-time**: Polling-based notifications
+
+### 🔄 Workflow States
+- **Reports**: REPORTED → APPROVED → ASSIGNED → IN_PROGRESS → COMPLETED
+- **Tasks**: ASSIGNED → ACCEPTED → IN_PROGRESS → COMPLETED/UNABLE
+- **Feedback**: OPEN → IN_PROGRESS → RESOLVED/REJECTED
+- **Issues**: PENDING → IN_REVIEW → RESOLVED/REJECTED
+
+---
+
+## 📈 System Capabilities
+
+### 🎯 Core Functionality
+- ✅ **Multi-role System**: Citizens, Workers, and Admins with distinct interfaces
+- ✅ **Complete Workflow**: From report submission to task completion
+- ✅ **Real-time Updates**: Status synchronization across all roles
+- ✅ **Performance Tracking**: Individual and team metrics
+- ✅ **Audit Trail**: Complete system activity logging
+- ✅ **Mobile Responsive**: Works on all device sizes
+
+### 📊 Analytics & Reporting
+- ✅ **Admin Dashboard**: Comprehensive system analytics
+- ✅ **Worker Performance**: Individual efficiency metrics
+- ✅ **System Health**: Real-time system statistics
+- ✅ **Trend Analysis**: Time-based performance data
+- ✅ **Export Capabilities**: CSV export for compliance
+
+### 🔒 Security & Compliance
+- ✅ **Role-based Access**: Granular permissions by role
+- ✅ **Audit Logging**: Complete activity tracking
+- ✅ **Secure Authentication**: JWT-based session management
+- ✅ **Data Validation**: Input sanitization and validation
+- ✅ **File Upload Security**: Image validation and size limits
 
 ---
 

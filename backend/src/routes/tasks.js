@@ -8,9 +8,11 @@ const prisma = new PrismaClient();
 
 // Status transition validation for tasks
 const VALID_TASK_TRANSITIONS = {
-  'ASSIGNED': ['IN_PROGRESS'],
-  'IN_PROGRESS': ['COMPLETED'],
-  'COMPLETED': []
+  'ASSIGNED': ['ACCEPTED', 'UNABLE'],
+  'ACCEPTED': ['IN_PROGRESS', 'UNABLE'],
+  'IN_PROGRESS': ['COMPLETED', 'UNABLE'],
+  'COMPLETED': [],
+  'UNABLE': []
 };
 
 // Helper function to add status history entry
@@ -58,9 +60,9 @@ router.get('/', authenticateToken, authorizeRoles('Worker'), async (req, res) =>
 router.put('/:id/collect', authenticateToken, authorizeRoles('Worker'), async (req, res) => {
   try {
     const { id } = req.params;
-    const { action } = req.body; // 'start' or 'complete'
+    const { action, unableReason } = req.body; // 'accept', 'start', 'complete', 'unable'
 
-    if (!['start', 'complete'].includes(action)) {
+    if (!['accept', 'start', 'complete', 'unable'].includes(action)) {
       return res.status(400).json({ error: 'Invalid action' });
     }
 
@@ -89,6 +91,14 @@ router.put('/:id/collect', authenticateToken, authorizeRoles('Worker'), async (r
     let updateData = {};
 
     switch (action) {
+      case 'accept':
+        newStatus = 'ACCEPTED';
+        note = 'Task accepted by worker';
+        updateData.status = newStatus;
+        updateData.statusHistory = addStatusHistory(task.statusHistory, newStatus, note);
+        updateData.acceptedAt = new Date();
+        break;
+      
       case 'start':
         newStatus = 'IN_PROGRESS';
         note = 'Collection started by worker';
@@ -113,6 +123,30 @@ router.put('/:id/collect', authenticateToken, authorizeRoles('Worker'), async (r
                 task.garbageReport.statusHistory,
                 'COMPLETED',
                 `Collection completed by ${req.user.name}`
+              )
+            }
+          });
+        }
+        break;
+
+      case 'unable':
+        newStatus = 'UNABLE';
+        note = unableReason || 'Worker unable to complete task';
+        updateData.status = newStatus;
+        updateData.statusHistory = addStatusHistory(task.statusHistory, newStatus, note);
+        updateData.unableReason = unableReason;
+        
+        // Update garbage report back to ASSIGNED for reassignment
+        if (task.garbageReport) {
+          await prisma.garbageReport.update({
+            where: { id: task.garbageReport.id },
+            data: {
+              status: 'ASSIGNED',
+              assignedWorkerId: null, // Remove worker assignment
+              statusHistory: addStatusHistory(
+                task.garbageReport.statusHistory,
+                'ASSIGNED',
+                `Task marked as unable by ${req.user.name}: ${unableReason}`
               )
             }
           });
