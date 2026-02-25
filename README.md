@@ -214,4 +214,4 @@ Note: Check your .env file for actual demo passwords.
 
 ---
 
-🗑️ Built with React, Node.js, and Prisma for demonstration purposes.
+❤️ Built with React, Node.js, and Prisma for demonstration purposes.
