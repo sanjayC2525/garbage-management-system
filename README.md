@@ -1,4 +1,4 @@
-# Garbage Management System
+# 🗑️ Garbage Management System
 
 A prototype web application for managing garbage collection requests with role-based workflow and status tracking.
 
@@ -11,7 +11,7 @@ This is a functional prototype demonstrating core garbage management workflows. 
 
 ## Features
 
-### Working Features
+### ✅ Working Features
 - User authentication with JWT tokens and role-based access control
 - Citizens can submit garbage reports with photos and GPS location
 - Admin dashboard for reviewing and managing reports
@@ -21,7 +21,7 @@ This is a functional prototype demonstrating core garbage management workflows. 
 - Basic analytics and reporting for admin users
 - Mobile-responsive web interface
 
-### Partially Working / Buggy Features
+### 🟡 Partially Working / Buggy Features
 - Admin dashboard: Some views show blank data or fail to load
 - Feedback system: Admin replies may not reflect immediately in UI
 - Worker statistics: Performance metrics do not update in real-time
@@ -29,7 +29,7 @@ This is a functional prototype demonstrating core garbage management workflows. 
 - Real-time notifications: Implemented with polling, not WebSocket
 - Location services: Basic GPS integration without route optimization
 
-### Not Implemented
+### ❌ Not Implemented
 - WebSocket real-time updates
 - Advanced analytics and AI-powered assignment
 - Route optimization for workers
@@ -38,21 +38,21 @@ This is a functional prototype demonstrating core garbage management workflows. 
 - Multi-tenant support
 - Advanced reporting and export features
 
-## Role-wise Features
+## 👥 Role-wise Features
 
-### Citizen Features
+### 👤 Citizen Features
 - Submit garbage reports with photos and location
 - View report history and status updates
 - Submit feedback and issues to administrators
 - Receive notifications about report status changes
 
-### Worker Features
+### 👷 Worker Features
 - View assigned tasks and work orders
 - Update task status (accept, in-progress, complete)
 - Upload before/after photos as proof of work
 - View basic performance metrics
 
-### Admin Features
+### 👑 Admin Features
 - Review and approve/reject citizen reports
 - Assign workers to reports and tasks
 - Monitor system analytics and statistics
@@ -60,7 +60,7 @@ This is a functional prototype demonstrating core garbage management workflows. 
 - Handle citizen feedback and issues
 - View audit logs and system activity
 
-## Security & Privacy
+## 🔒 Security & Privacy
 
 ### Known Security Risks
 - Demo credentials: Hardcoded passwords in development seed file
@@ -76,9 +76,9 @@ This is a functional prototype demonstrating core garbage management workflows. 
 - No data anonymization or retention policies
 - Basic audit logging without privacy controls
 
-## Known Issues
+### ⚠️ Known Issues
 
-### Current Bugs
+### 🐛 Current Bugs
 - Admin dashboard displays blank views in some sections
 - Feedback replies do not immediately reflect in the interface
 - Worker statistics fail to update in real-time
@@ -87,14 +87,14 @@ This is a functional prototype demonstrating core garbage management workflows. 
 - Mobile responsive layout breaks on some screen sizes
 - File upload validation is incomplete
 
-### Limitations
+### 📏 Limitations
 - SQLite database not suitable for production scale
 - No automated tests or error handling
 - Limited concurrent user support
 - Basic error messages without user guidance
 - No backup or recovery mechanisms
 
-## Setup (Development Only)
+## 🛠️ Setup (Development Only)
 
 ### Prerequisites
 - Node.js 18+
@@ -151,26 +151,26 @@ Note: Check your .env file for actual demo passwords.
 - Exclude user-generated content from version control
 - Review all code changes for sensitive data exposure
 
-## Tech Stack
+## 🔧 Tech Stack
 
-### Backend
+### ⚙️ Backend
 - Node.js with Express.js
 - Prisma ORM with SQLite database
 - JWT authentication with bcrypt
 - Multer for file uploads
 
-### Frontend
+### 🎨 Frontend
 - React with Vite build tool
 - TailwindCSS for styling
 - Axios for HTTP requests
 - React Hot Toast for notifications
 
-### Development Tools
+### 🛠️ Development Tools
 - npm for package management
 - Prisma Migrate for database changes
 - Concurrently for running multiple processes
 
-## Database Schema
+## 🗄️ Database Schema
 
 - Users: Authentication and role management
 - GarbageReports: Citizen reports with status tracking
@@ -181,15 +181,15 @@ Note: Check your .env file for actual demo passwords.
 - AuditLogs: Activity tracking
 - Workers: Worker profiles and performance data
 
-## Contributing
+## 🤝 Contributing
 
-### Development Guidelines
+### 📝 Development Guidelines
 - Follow existing code style and patterns
 - Add error handling for new features
 - Test all role-based functionality
 - Update documentation for API changes
 
-### Areas for Contribution
+### 🎯 Areas for Contribution
 - Automated testing implementation
 - WebSocket real-time updates
 - Advanced analytics features
@@ -197,15 +197,15 @@ Note: Check your .env file for actual demo passwords.
 - Security hardening
 - Performance optimization
 
-## Architecture Notes
+## 🏗️ Architecture Notes
 
-### Workflow States
+### 🔄 Workflow States
 - Reports: REPORTED → APPROVED → ASSIGNED → IN_PROGRESS → COMPLETED
 - Tasks: ASSIGNED → ACCEPTED → IN_PROGRESS → COMPLETED/UNABLE
 - Feedback: OPEN → IN_PROGRESS → RESOLVED/REJECTED
 - Issues: PENDING → IN_REVIEW → RESOLVED/REJECTED
 
-### Current Limitations
+### 📋 Current Limitations
 - Single-organization deployment only
 - Limited scalability with SQLite
 - No multi-language support
@@ -214,4 +214,4 @@ Note: Check your .env file for actual demo passwords.
 
 ---
 
-Built with React, Node.js, and Prisma for demonstration purposes.
+🗑️ Built with React, Node.js, and Prisma for demonstration purposes.
